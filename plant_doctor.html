@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Plant Doctor - Vrindavan Garden Center</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌿</text></svg>">
+    
+    <style>
+        /* Custom styles to use the Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Style for the file input button */
+        .file-input-button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased">
+
+    <header id="header" class="bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold text-emerald-700 hover:text-emerald-800 transition-colors">
+                Vrindavan Garden
+            </a>
+
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="/" class="text-stone-600 hover:text-emerald-600 transition-colors">Home</a>
+                <a href="/#about" class="text-stone-600 hover:text-emerald-600 transition-colors">About</a>
+                <a href="/#services" class="text-stone-600 hover:text-emerald-600 transition-colors">Services</a>
+                <a href="/#contact" class="text-stone-600 hover:text-emerald-600 transition-colors">Contact</a>
+            </div>
+
+            <a href="/plant-doctor" class="hidden md:inline-block bg-emerald-700 text-white px-5 py-2 rounded-full font-semibold shadow-md ring-2 ring-emerald-300">
+                AI Plant Doctor
+            </a>
+
+            <button id="mobile-menu-button" class="md:hidden focus:outline-none">
+                <svg class="w-6 h-6 text-stone-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+
+        <div id="mobile-menu" class="hidden md:hidden">
+            <div class="px-6 pt-2 pb-4 space-y-2 border-t border-stone-200">
+                <a href="/" class="block text-stone-600 hover:text-emerald-600 transition-colors py-2">Home</a>
+                <a href="/#about" class="block text-stone-600 hover:text-emerald-600 transition-colors py-2">About</a>
+                <a href="/#services" class="block text-stone-600 hover:text-emerald-600 transition-colors py-2">Services</a>
+                <a href="/#contact" class="block text-stone-600 hover:text-emerald-600 transition-colors py-2">Contact</a>
+                <a href="/plant-doctor" class="block w-full text-center mt-4 bg-emerald-700 text-white px-5 py-2 rounded-full font-semibold shadow-sm">
+                    AI Plant Doctor
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12 md:py-20">
+        <div class="max-w-3xl mx-auto">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-stone-900">AI Plant Doctor</h1>
+                <p class="mt-4 text-lg text-stone-600">Is your plant looking unwell? Let our AI help you diagnose the problem.</p>
+            </div>
+
+            <div class="bg-white p-8 rounded-2xl shadow-lg">
+                <div class="file-uploader mb-6">
+                    <label for="plant-image" class="file-input-button w-full flex flex-col items-center px-4 py-10 bg-white text-emerald-600 rounded-lg border-2 border-dashed border-emerald-300 hover:bg-emerald-50 hover:border-emerald-500 transition-colors">
+                        <svg class="w-12 h-12" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                            <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4 4-4-4h3v-3h2v3z" />
+                        </svg>
+                        <span class="mt-2 text-base leading-normal font-semibold">Select an image</span>
+                        <span class="mt-1 text-sm text-stone-500">or drag and drop</span>
+                    </label>
+                    <input type="file" id="plant-image" name="image" accept="image/*" class="hidden" />
+                </div>
+                
+                <div id="image-preview" class="mb-6 hidden"></div>
+
+                <div id="spinner" class="text-center py-4" style="display: none;">
+                    <div class="flex justify-center items-center gap-4">
+                        <svg class="animate-spin h-8 w-8 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <p class="text-lg font-semibold text-stone-700">Diagnosing your plant...</p>
+                    </div>
+                </div>
+
+                <div id="error" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md mb-6" style="display: none;" role="alert"></div>
+                <div id="warning" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md mb-6" style="display: none;" role="alert"></div>
+
+                <div id="diagnosis" class="diagnosis-section" style="display: none;">
+                    <h2 class="text-2xl font-bold text-stone-800 border-b pb-2 mb-4">Diagnosis and Treatment</h2>
+                    <div id="diagnosis-text" class="prose prose-stone max-w-none"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer id="contact" class="bg-stone-800 text-stone-300 mt-20">
+        <div class="container mx-auto px-6 py-16">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 text-center md:text-left">
+                <div class="md:col-span-2">
+                    <h4 class="text-xl font-bold text-white mb-4">Vrindavan Garden Center</h4>
+                    <p class="max-w-md mx-auto md:mx-0 text-stone-400">Your partners in creating beautiful, living spaces.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/#about" class="hover:text-emerald-400 transition-colors">About Us</a></li>
+                        <li><a href="/#services" class="hover:text-emerald-400 transition-colors">Services</a></li>
+                        <li><a href="/plant-doctor" class="hover:text-emerald-400 transition-colors">Plant Doctor</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-4">Contact Us</h4>
+                    <ul class="space-y-2">
+                        <li><a href="mailto:hello@vrindavan.garden" class="hover:text-emerald-400 transition-colors">hello@vrindavan.garden</a></li>
+                        <li><a href="tel:+911234567890" class="hover:text-emerald-400 transition-colors">+91 12345 67890</a></li>
+                        <li class="text-stone-400">Green Valley Road, Pune</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-stone-700 pt-8 text-center text-stone-500 text-sm">
+                <p>&copy; <span id="year"></span> Vrindavan Garden Center. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const plantImageInput = document.getElementById('plant-image');
+            const imagePreview = document.getElementById('image-preview');
+            const spinner = document.getElementById('spinner');
+            const errorDiv = document.getElementById('error');
+            const warningDiv = document.getElementById('warning');
+            const diagnosisDiv = document.getElementById('diagnosis');
+            const diagnosisText = document.getElementById('diagnosis-text');
+
+            // Function to parse simple Markdown-like syntax for styling
+            function parseSimpleMarkdown(text) {
+                // Replace **text** with <strong>text</strong> for bolding
+                let html = text.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold">$1</strong>');
+                // Split by newlines to process paragraphs
+                const paragraphs = html.split('\n').filter(p => p.trim() !== '');
+                // Wrap each paragraph in a <p> tag
+                return paragraphs.map(p => `<p class="mb-4">${p}</p>`).join('');
+            }
+
+            // Preview the plant image and trigger diagnosis
+            plantImageInput.addEventListener('change', () => {
+                const file = plantImageInput.files[0];
+                if (file) {
+                    imagePreview.innerHTML = ''; // Clear previous preview
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    img.className = 'max-w-full h-auto rounded-lg mx-auto shadow-md';
+                    img.onload = () => {
+                        URL.revokeObjectURL(img.src); // Free memory
+                    }
+                    imagePreview.appendChild(img);
+                    imagePreview.classList.remove('hidden');
+                    
+                    // Hide previous results
+                    diagnosisDiv.style.display = 'none';
+                    errorDiv.style.display = 'none';
+                    warningDiv.style.display = 'none';
+
+                    diagnosePlant(file);
+                }
+            });
+
+            // Function to diagnose the plant
+            async function diagnosePlant(file) {
+                if (!file) {
+                    errorDiv.textContent = 'Please upload an image of your plant.';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+
+                spinner.style.display = 'block';
+                errorDiv.style.display = 'none';
+                warningDiv.style.display = 'none';
+
+                const formData = new FormData();
+                formData.append('image', file);
+
+                try {
+                    const response = await fetch('/diagnose', {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    const data = await response.json();
+                    if (response.ok) {
+                        if (data.diagnosis) {
+                            const formattedDiagnosis = parseSimpleMarkdown(data.diagnosis);
+                            diagnosisText.innerHTML = formattedDiagnosis;
+                            diagnosisDiv.style.display = 'block';
+                        } else {
+                            warningDiv.textContent = 'The model did not return a diagnosis. This might be due to a safety filter or an inability to analyze the image. Please try a different image.';
+                            warningDiv.style.display = 'block';
+                        }
+                    } else {
+                        errorDiv.textContent = data.error || 'An unknown error occurred during diagnosis.';
+                        errorDiv.style.display = 'block';
+                    }
+                } catch (error) {
+                    errorDiv.textContent = `A network error occurred: ${error.message}. Please check your connection and try again.`;
+                    errorDiv.style.display = 'block';
+                } finally {
+                    spinner.style.display = 'none';
+                }
+            }
+
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Set current year in the footer
+            document.getElementById('year').textContent = new Date().getFullYear();
+        });
+    </script>
+</body>
+</html>
